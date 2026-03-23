@@ -492,7 +492,7 @@ EOF`,
       {
         title: { uk: "Bootstrap Flux через SSH", en: "Bootstrap Flux via SSH" },
         description: { uk: "Ця команда встановить Flux у кластер і зв'яже його з вашим репозиторієм використовуючи Deploy Key.", en: "This command installs Flux in the cluster and links it to your repository using the Deploy Key." },
-        command: "flux bootstrap git \\\n  --url=ssh://git@github.com/ruslanlap/homelab-k8s.git \\\n  --branch=main \\\n  --path=clusters/my-cluster \\\n  --private-key-file=$HOME/.ssh/flux_ed25519",
+        command: "flux bootstrap git \\\n  --url=ssh://git@github.com/ruslanlap/homelab-k8s.git \\\n  --branch=main \\\n  --path=homelab-gitops/clusters/production \\\n  --private-key-file=$HOME/.ssh/flux_ed25519",
         expectedResult: { uk: "Flux компоненти запущені в кластері, репозиторій синхронізовано.", en: "Flux components are running in the cluster, repository is synced." },
         expectedOutput: "► connecting to github.com\n✔ repository cloned\n► generating component manifests\n✔ components are healthy\n✔ bootstrap finished",
         possibleErrors: { uk: "Host key verification failed: переконайтеся, що ви додали публічний ключ до Deploy Keys у GitHub з правами запису.", en: "Host key verification failed: ensure you added the public key to Deploy Keys in GitHub with write access." }
@@ -505,31 +505,42 @@ EOF`,
       },
       {
         title: { uk: "Структура GitOps репозиторію", en: "GitOps Repository Structure" },
-        description: { uk: "Ось як має виглядати структура вашого репозиторію після додавання всіх сервісів. Flux автоматично сканує папку 'clusters/my-cluster' і застосовує всі YAML файли.", en: "Here is what your repository structure should look like after adding all services. Flux automatically scans the 'clusters/my-cluster' folder and applies all YAML files." },
-        command: "tree .",
+        description: { uk: "Ось як має виглядати структура вашого репозиторію після додавання всіх сервісів. Flux автоматично сканує папку 'homelab-gitops/clusters/production' і застосовує всі YAML файли.", en: "Here is what your repository structure should look like after adding all services. Flux automatically scans the 'homelab-gitops/clusters/production' folder and applies all YAML files." },
+        command: "tree homelab-gitops",
         expectedOutput: `
-.
+homelab-gitops
+├── apps
+│   ├── base
+│   │   ├── kustomization.yaml
+│   │   └── namespace.yaml
+│   └── production
+│       ├── homeassistant
+│       │   └── deployment.yaml
+│       ├── nginx
+│       │   └── deployment.yaml
+│       ├── pihole
+│       │   └── deployment.yaml
+│       └── kustomization.yaml
 ├── clusters
-│   └── my-cluster
+│   └── production
 │       ├── flux-system          # Автоматично створено Flux при bootstrap
 │       │   ├── gotk-components.yaml
 │       │   ├── gotk-sync.yaml
 │       │   └── kustomization.yaml
-│       ├── homeassistant        # Ваші маніфести
-│       │   └── deployment.yaml
-│       ├── nginx                # Тестовий маніфест
-│       │   └── deployment.yaml
-│       └── pihole               # Ваші маніфести
-│           └── deployment.yaml
-└── README.md
+│       ├── apps.yaml
+│       ├── infrastructure.yaml
+│       └── kustomization.yaml
+└── infrastructure
+    ├── controllers
+    └── storage
 `,
         expectedResult: { uk: "Ви бачите повну ієрархію файлів у вашому GitOps репозиторії.", en: "You see the full file hierarchy in your GitOps repository." }
       },
       {
         title: { uk: "Створення тестового маніфесту Nginx", en: "Create test Nginx manifest" },
         description: { uk: "Створимо простий Nginx через GitOps.", en: "Let's create a simple Nginx via GitOps." },
-        command: `mkdir -p clusters/my-cluster/nginx
-cat <<EOF > clusters/my-cluster/nginx/deployment.yaml
+        command: `mkdir -p homelab-gitops/apps/production/nginx
+cat <<EOF > homelab-gitops/apps/production/nginx/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -563,13 +574,13 @@ spec:
           initialDelaySeconds: 3
           periodSeconds: 3
 EOF`,
-        expectedResult: { uk: "Файл deployment.yaml для Nginx створено у папці clusters/my-cluster/nginx.", en: "deployment.yaml file for Nginx created in clusters/my-cluster/nginx folder." }
+        expectedResult: { uk: "Файл deployment.yaml для Nginx створено у папці homelab-gitops/apps/production/nginx.", en: "deployment.yaml file for Nginx created in homelab-gitops/apps/production/nginx folder." }
       },
       {
         title: { uk: "Створення маніфесту Pi-hole", en: "Create Pi-hole manifest" },
         description: { uk: "Додамо Pi-hole для блокування реклами та pihole-exporter для моніторингу через GitOps.", en: "Let's add Pi-hole for ad blocking and pihole-exporter for monitoring via GitOps." },
-        command: `mkdir -p clusters/my-cluster/pihole
-cat <<EOF > clusters/my-cluster/pihole/deployment.yaml
+        command: `mkdir -p homelab-gitops/apps/production/pihole
+cat <<EOF > homelab-gitops/apps/production/pihole/deployment.yaml
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -676,13 +687,13 @@ spec:
     name: dns-udp
     protocol: UDP
 EOF`,
-        expectedResult: { uk: "Файл deployment.yaml для Pi-hole створено у папці clusters/my-cluster/pihole.", en: "deployment.yaml file for Pi-hole created in clusters/my-cluster/pihole folder." }
+        expectedResult: { uk: "Файл deployment.yaml для Pi-hole створено у папці homelab-gitops/apps/production/pihole.", en: "deployment.yaml file for Pi-hole created in homelab-gitops/apps/production/pihole folder." }
       },
       {
         title: { uk: "Створення маніфесту Home Assistant", en: "Create Home Assistant manifest" },
         description: { uk: "Додамо систему розумного дому Home Assistant на порт 8123.", en: "Let's add the Home Assistant smart home system on port 8123." },
-        command: `mkdir -p clusters/my-cluster/homeassistant
-cat <<EOF > clusters/my-cluster/homeassistant/deployment.yaml
+        command: `mkdir -p homelab-gitops/apps/production/homeassistant
+cat <<EOF > homelab-gitops/apps/production/homeassistant/deployment.yaml
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -754,7 +765,7 @@ spec:
     nodePort: 30123
     name: http
 EOF`,
-        expectedResult: { uk: "Файл deployment.yaml для Home Assistant створено у папці clusters/my-cluster/homeassistant.", en: "deployment.yaml file for Home Assistant created in clusters/my-cluster/homeassistant folder." }
+        expectedResult: { uk: "Файл deployment.yaml для Home Assistant створено у папці homelab-gitops/apps/production/homeassistant.", en: "deployment.yaml file for Home Assistant created in homelab-gitops/apps/production/homeassistant folder." }
       },
       {
         title: { uk: "Відправка в Git (Commit & Push)", en: "Send to Git (Commit & Push)" },
@@ -765,19 +776,30 @@ EOF`,
       {
         title: { uk: "Перевірка фінальної структури", en: "Final Structure Check" },
         description: { uk: "Переконайтеся, що всі файли на своїх місцях перед тим, як Flux почне їх застосовувати.", en: "Ensure all files are in their places before Flux starts applying them." },
-        command: "tree .",
+        command: "tree homelab-gitops",
         expectedOutput: `
-.
-├── clusters
-│   └── my-cluster
-│       ├── flux-system
+homelab-gitops
+├── apps
+│   ├── base
+│   │   ├── kustomization.yaml
+│   │   └── namespace.yaml
+│   └── production
 │       ├── homeassistant
 │       │   └── deployment.yaml
 │       ├── nginx
 │       │   └── deployment.yaml
-│       └── pihole
-│           └── deployment.yaml
-└── README.md
+│       ├── pihole
+│       │   └── deployment.yaml
+│       └── kustomization.yaml
+├── clusters
+│   └── production
+│       ├── flux-system
+│       ├── apps.yaml
+│       ├── infrastructure.yaml
+│       └── kustomization.yaml
+└── infrastructure
+    ├── controllers
+    └── storage
 `,
         expectedResult: { uk: "Ви бачите всі створені маніфести у відповідних папках.", en: "You see all created manifests in their respective folders." }
       },
