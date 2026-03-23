@@ -1,0 +1,5 @@
+{
+  "name": "K8s Homelab Guide",
+  "description": "A professional, interactive step-by-step guide for building a home Kubernetes cluster on Mini PCs using Windows 11 WSL.",
+  "requestFramePermissions": []
+}
