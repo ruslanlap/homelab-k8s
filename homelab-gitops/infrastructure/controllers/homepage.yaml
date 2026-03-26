@@ -12,6 +12,11 @@ data:
     settings.yaml: |
         title: HomeLab Dashboard
         headerStyle: clean
+        background:
+          image: https://raw.githubusercontent.com/orangci/walls-catppuccin-mocha/master/keyboard-2.png
+          blur: sm
+          brightness: 40
+          saturation: 110
         theme: dark
         color: slate
         statusStyle: dot
@@ -42,7 +47,6 @@ data:
 
         body {
           background:
-            linear-gradient(rgba(8, 12, 24, 0.62), rgba(8, 12, 24, 0.72)),
             url("https://raw.githubusercontent.com/orangci/walls-catppuccin-mocha/master/keyboard-2.png")
               center/cover no-repeat fixed !important;
           background-attachment: fixed !important;
