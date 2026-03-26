@@ -3,5 +3,6 @@ kind: Kustomization
 resources:
     - cert-manager.yaml
     - homepage.yaml
+    - ingress-apps.yaml
     - ingress-nginx.yaml
     - loki.yaml
