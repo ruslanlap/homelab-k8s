@@ -3,7 +3,7 @@
 Thumbs.db
 .vscode/
 .idea/
-
+**/production/pihole/secret.yaml
 # Logs
 *.log
 npm-debug.log*

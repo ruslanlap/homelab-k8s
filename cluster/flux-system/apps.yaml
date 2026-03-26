@@ -7,7 +7,7 @@ spec:
   interval: 10m
   dependsOn:
     - name: infrastructure
-  path: ./apps/production
+  path: ./homelab-gitops/apps/production
   prune: true
   sourceRef:
     kind: GitRepository
