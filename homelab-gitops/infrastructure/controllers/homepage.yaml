@@ -1,0 +1,171 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+    name: homepage
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: homepage-config
+    namespace: homepage
+data:
+    settings.yaml: |
+        title: K8s Home Lab
+        background: https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1920&q=80
+        cardBlur: sm
+        theme: dark
+        layout:
+          Network:
+            style: grid
+            columns: 2
+          Automation:
+            style: grid
+            columns: 1
+          Monitoring:
+            style: grid
+            columns: 1
+          Telegram Bots:
+            style: grid
+            columns: 2
+    widgets.yaml: |
+        - logo:
+            icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.svg
+        - datetime:
+            text_size: xl
+            format:
+              dateStyle: long
+              timeStyle: short
+        - kubernetes:
+            cluster:
+              show: true
+              cpu: true
+              memory: true
+              nodes: true
+        - resources:
+            cpu: true
+            memory: true
+            disk: /
+    bookmarks.yaml: |
+        - Social:
+            - GitHub:
+                - abbr: GH
+                  href: https://github.com/
+            - Reddit:
+                - abbr: RE
+                  href: https://reddit.com/
+        - DevOps:
+            - Artifact Hub:
+                - abbr: AH
+                  href: https://artifacthub.io/
+            - K8s Docs:
+                - abbr: K8S
+                  href: https://kubernetes.io/docs/
+    kubernetes.yaml: |
+        mode: cluster
+        show_node_stats: true
+    services.yaml: |
+        - Network:
+            - Pi-hole:
+                href: http://192.168.1.10:30081/admin
+                icon: pi-hole.png
+                description: Network-wide Ad Blocking
+            - AdGuard Home:
+                href: http://192.168.1.10:30082
+                icon: adguard-home.png
+        - Automation:
+            - Home Assistant:
+                href: http://192.168.1.10:30123
+                icon: home-assistant.png
+        - Monitoring:
+            - Grafana:
+                href: http://192.168.1.10:30300
+                icon: grafana.png
+        - Telegram Bots:
+            - My Assistant Bot:
+                href: https://t.me/MyAssistantBot
+                icon: telegram.png
+                description: Personal Assistant
+            - Home Alerts Bot:
+                href: https://t.me/HomeAlertsBot
+                icon: telegram.png
+                description: Smart Home Notifications
+            - Server Status Bot:
+                href: https://t.me/ServerStatusBot
+                icon: telegram.png
+                description: K8s Cluster Health
+            - Security Cam Bot:
+                href: https://t.me/SecurityCamBot
+                icon: telegram.png
+                description: Motion Alerts & Snapshots
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+    name: homepage
+    namespace: homepage
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+    name: homepage
+rules:
+    - apiGroups: [""]
+      resources: ["nodes", "pods", "namespaces", "services"]
+      verbs: ["get", "list", "watch"]
+    - apiGroups: ["apps"]
+      resources: ["deployments", "statefulsets"]
+      verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+    name: homepage
+roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: homepage
+subjects:
+    - kind: ServiceAccount
+      name: homepage
+      namespace: homepage
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: homepage
+    namespace: homepage
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: homepage
+    template:
+        metadata:
+            labels:
+                app: homepage
+        spec:
+            serviceAccountName: homepage
+            containers:
+                - name: homepage
+                  image: ghcr.io/gethomepage/homepage:latest
+                  ports:
+                      - containerPort: 3000
+                  volumeMounts:
+                      - name: config
+                        mountPath: /app/config
+            volumes:
+                - name: config
+                  configMap:
+                      name: homepage-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: homepage
+    namespace: homepage
+spec:
+    selector:
+        app: homepage
+    ports:
+        - port: 80
+          targetPort: 3000
