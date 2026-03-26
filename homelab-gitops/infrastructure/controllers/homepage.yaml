@@ -164,8 +164,10 @@ metadata:
     name: homepage
     namespace: homepage
 spec:
+    type: NodePort
     selector:
         app: homepage
     ports:
         - port: 80
           targetPort: 3000
+          nodePort: 30090
