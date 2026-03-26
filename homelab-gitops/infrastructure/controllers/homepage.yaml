@@ -42,9 +42,9 @@ data:
 
         body {
           background:
-            radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.22), transparent 38%),
-            radial-gradient(circle at 80% 0%, rgba(99, 102, 241, 0.18), transparent 42%),
-            linear-gradient(145deg, #090d1a 0%, #111a31 50%, #0b1326 100%) !important;
+            linear-gradient(rgba(8, 12, 24, 0.62), rgba(8, 12, 24, 0.72)),
+            url("https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=2400&q=80")
+              center/cover no-repeat fixed !important;
           background-attachment: fixed !important;
         }
 
