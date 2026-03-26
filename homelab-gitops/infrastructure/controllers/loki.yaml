@@ -26,11 +26,14 @@ spec:
                 name: grafana
                 namespace: flux-system
             interval: 12h
-    values:
-        promtail:
-            enabled: true
-        grafana:
-            enabled: false
+  values:
+    promtail:
+      enabled: true
+    grafana:
+      enabled: false
+      sidecar:
+        datasources:
+          enabled: false
 ---
 apiVersion: v1
 kind: ConfigMap
