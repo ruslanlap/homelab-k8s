@@ -10,28 +10,56 @@ metadata:
     namespace: homepage
 data:
     settings.yaml: |
-        title: K8s Home Lab
-        background: https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1920&q=80
-        cardBlur: sm
+        title: HomeLab Dashboard
+        headerStyle: clean
+        background:
+          image: https://raw.githubusercontent.com/orangci/walls-catppuccin-mocha/master/keyboard-2.png
+          blur: sm
+          brightness: 35
+          saturation: 110
         theme: dark
+        color: slate
+        statusStyle: dot
+        hideVersion: true
         layout:
-          Network:
+          Infrastructure:
             style: grid
-            columns: 2
+            columns: 4
           Automation:
             style: grid
-            columns: 1
-          Monitoring:
+            columns: 3
+          IoT and Smarthome:
             style: grid
-            columns: 1
-          Telegram Bots:
+            columns: 3
+          Security and Identity:
             style: grid
-            columns: 2
+            columns: 3
+          Repositories:
+            style: list
+          Cloud Services:
+            style: list
+          Cloud Platforms:
+            style: list
+    custom.css: |
+        :root {
+          --card-radius: 14px;
+        }
+
+        .information-widget {
+          backdrop-filter: blur(6px);
+        }
+
+        .service {
+          border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+    custom.js: |
+        // Intentionally left blank.
     widgets.yaml: |
         - logo:
             icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.svg
         - datetime:
-            text_size: xl
+            locale: uk-UA
+            text_size: 2xl
             format:
               dateStyle: long
               timeStyle: short
@@ -46,57 +74,124 @@ data:
             memory: true
             disk: /
     bookmarks.yaml: |
-        - Social:
-            - GitHub:
-                - abbr: GH
-                  href: https://github.com/
-            - Reddit:
-                - abbr: RE
-                  href: https://reddit.com/
-        - DevOps:
+        - Docs:
+            - Kubernetes:
+                - abbr: K8S
+                  href: https://kubernetes.io/docs/
+            - FluxCD:
+                - abbr: FL
+                  href: https://fluxcd.io/
+            - Helm:
+                - abbr: HM
+                  href: https://helm.sh/docs/
+        - Tools:
             - Artifact Hub:
                 - abbr: AH
                   href: https://artifacthub.io/
-            - K8s Docs:
-                - abbr: K8S
-                  href: https://kubernetes.io/docs/
+            - GitHub:
+                - abbr: GH
+                  href: https://github.com/
     kubernetes.yaml: |
         mode: cluster
         show_node_stats: true
+    docker.yaml: |
+        []
     services.yaml: |
-        - Network:
+        - Infrastructure:
             - Pi-hole:
                 href: http://192.168.1.10:30081/admin
-                icon: pi-hole.png
+                icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/pi-hole.svg
                 description: Network-wide Ad Blocking
             - AdGuard Home:
                 href: http://192.168.1.10:30082
-                icon: adguard-home.png
+                icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/adguard-home.svg
+                description: DNS & filtering
+            - Grafana:
+                href: http://grafana.home.lab:30080/
+                icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/grafana.svg
+                description: Dashboards
+            - TrueNAS:
+                href: http://192.168.1.10
+                icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/truenas.svg
+                description: Storage
         - Automation:
             - Home Assistant:
                 href: http://192.168.1.10:30123
-                icon: home-assistant.png
-        - Monitoring:
-            - Grafana:
-                href: http://192.168.1.10:30300
-                icon: grafana.png
-        - Telegram Bots:
-            - My Assistant Bot:
-                href: https://t.me/MyAssistantBot
-                icon: telegram.png
-                description: Personal Assistant
-            - Home Alerts Bot:
-                href: https://t.me/HomeAlertsBot
-                icon: telegram.png
-                description: Smart Home Notifications
-            - Server Status Bot:
-                href: https://t.me/ServerStatusBot
-                icon: telegram.png
-                description: K8s Cluster Health
-            - Security Cam Bot:
-                href: https://t.me/SecurityCamBot
-                icon: telegram.png
-                description: Motion Alerts & Snapshots
+                icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/home-assistant.svg
+                description: Smart home orchestration
+            - Argo CD:
+                href: http://argocd.home.lab
+                icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/argo-cd.svg
+                description: GitOps delivery
+            - Semaphore:
+                href: http://semaphore.home.lab
+                icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/ansible.svg
+                description: Ansible automation
+        - IoT and Smarthome:
+            - Zigbee2MQTT:
+                href: http://zigbee.home.lab
+                icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/mqtt.svg
+                description: Zigbee bridge
+            - Mosquitto:
+                href: http://mqtt.home.lab
+                icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/mqtt.svg
+                description: MQTT broker
+            - Node-RED:
+                href: http://nodered.home.lab
+                icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/node-red.svg
+                description: Flows & automations
+        - Security and Identity:
+            - Authentik:
+                href: http://authentik.home.lab
+                icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/authentik.svg
+                description: SSO & identity
+            - Vaultwarden:
+                href: http://vaultwarden.home.lab
+                icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/vaultwarden.svg
+                description: Password manager
+            - Passbolt:
+                href: http://passbolt.home.lab
+                icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/passbolt.svg
+                description: Team password vault
+        - Repositories:
+            - homelab-gitops:
+                href: https://github.com/your-org/homelab-gitops
+                icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/github.svg
+                description: GitOps manifests
+            - infra-live:
+                href: https://github.com/your-org/infra-live
+                icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/github.svg
+                description: Terraform live configs
+            - boilerplates:
+                href: https://github.com/your-org/boilerplates
+                icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/github.svg
+                description: Reusable templates
+        - Cloud Services:
+            - Cloudflare:
+                href: https://dash.cloudflare.com
+                icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/cloudflare.svg
+                description: DNS / WAF / Tunnel
+            - Tailscale:
+                href: https://login.tailscale.com
+                icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/tailscale.svg
+                description: Zero-trust mesh VPN
+            - Telegram:
+                href: https://web.telegram.org
+                icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/telegram.svg
+                description: Alerts and bots
+        - Cloud Platforms:
+            - Hetzner:
+                href: https://console.hetzner.cloud
+                icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/hetzner.svg
+                description: VMs and networks
+            - AWS:
+                href: https://console.aws.amazon.com
+                icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/aws.svg
+                description: Cloud workloads
+            - DigitalOcean:
+                href: https://cloud.digitalocean.com
+                icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/digital-ocean.svg
+                description: Apps and droplets
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -148,6 +243,9 @@ spec:
             containers:
                 - name: homepage
                   image: ghcr.io/gethomepage/homepage:latest
+                  env:
+                      - name: HOMEPAGE_ALLOWED_HOSTS
+                        value: homepage.home.lab,homepage.home.lab:30080
                   ports:
                       - containerPort: 3000
                   volumeMounts:
