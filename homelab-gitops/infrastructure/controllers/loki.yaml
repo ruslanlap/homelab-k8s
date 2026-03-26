@@ -27,13 +27,15 @@ spec:
                 namespace: flux-system
             interval: 12h
   values:
+    loki:
+      isDefault: false
     promtail:
       enabled: true
     grafana:
       enabled: false
       sidecar:
-        datasources:
-          enabled: false
+            datasources:
+                enabled: false
 ---
 apiVersion: v1
 kind: ConfigMap
