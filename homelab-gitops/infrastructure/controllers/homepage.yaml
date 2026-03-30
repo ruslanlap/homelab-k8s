@@ -268,7 +268,7 @@ spec:
                   image: ghcr.io/gethomepage/homepage@sha256:b129cb0f674bd6d204e215bde2c2fc3f11d6ad0e82f6d20007cf80f74e1acbb1
                   env:
                       - name: HOMEPAGE_ALLOWED_HOSTS
-                        value: homepage.home.lab,homepage.home.lab:30080
+                        value: homepage.home.lab,homepage.home.lab:30080,homepage.home.lab:30443
                   ports:
                       - containerPort: 3000
                   volumeMounts:
