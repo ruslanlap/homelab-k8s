@@ -20,17 +20,19 @@ spec:
                 - name: pihole
                   image: pihole/pihole:latest
                   securityContext:
-                    allowPrivilegeEscalation: false
-                    capabilities:
-                        drop:
-                            - ALL
-                        add:
-                            - NET_BIND_SERVICE
-                            - NET_RAW
-                            - NET_ADMIN
+                      allowPrivilegeEscalation: false
+                      capabilities:
+                          drop:
+                              - ALL
+                          add:
+                              - NET_BIND_SERVICE
+                              - NET_RAW
+                              - NET_ADMIN
                   env:
                       - name: TZ
                         value: Europe/Kyiv
+                      - name: DNSMASQ_USER
+                        value: root
                       - name: WEBPASSWORD
                         valueFrom:
                             secretKeyRef:
