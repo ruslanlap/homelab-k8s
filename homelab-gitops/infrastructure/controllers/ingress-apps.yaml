@@ -1,37 +1,62 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: homepage
-  namespace: homepage
+    name: homepage
+    namespace: homepage
 spec:
-  ingressClassName: nginx
-  rules:
-    - host: homepage.home.lab
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: homepage
-                port:
-                  number: 80
+    ingressClassName: nginx
+    rules:
+        - host: homepage.home.lab
+          http:
+              paths:
+                  - path: /
+                    pathType: Prefix
+                    backend:
+                        service:
+                            name: homepage
+                            port:
+                                number: 80
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: grafana
-  namespace: monitoring
+    name: grafana
+    namespace: monitoring
 spec:
-  ingressClassName: nginx
-  rules:
-    - host: grafana.home.lab
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: prometheus-stack-grafana
-                port:
-                  number: 80
+    ingressClassName: nginx
+    rules:
+        - host: grafana.home.lab
+          http:
+              paths:
+                  - path: /
+                    pathType: Prefix
+                    backend:
+                        service:
+                            name: prometheus-stack-grafana
+                            port:
+                                number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+    name: pihole
+    namespace: homelab
+    annotations:
+        cert-manager.io/cluster-issuer: homelab-selfsigned
+spec:
+    ingressClassName: nginx
+    tls:
+        - hosts:
+              - pihole.home.lab
+          secretName: pihole-tls
+    rules:
+        - host: pihole.home.lab
+          http:
+              paths:
+                  - path: /
+                    pathType: Prefix
+                    backend:
+                        service:
+                            name: pihole
+                            port:
+                                number: 80
