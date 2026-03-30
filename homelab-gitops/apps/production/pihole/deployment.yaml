@@ -28,6 +28,12 @@ spec:
                               - NET_BIND_SERVICE
                               - NET_RAW
                               - NET_ADMIN
+                              - CHOWN
+                              - FOWNER
+                              - SETUID
+                              - SETGID
+                              - SETFCAP
+                              - DAC_OVERRIDE
                   env:
                       - name: TZ
                         value: Europe/Kyiv
