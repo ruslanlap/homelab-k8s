@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+    name: pihole
+    namespace: homelab
+spec:
+    podSelector:
+        matchLabels:
+            app: pihole
+    policyTypes:
+        - Ingress
+    ingress:
+        # DNS: allow from all pods in the cluster
+        - ports:
+              - port: 53
+                protocol: TCP
+              - port: 53
+                protocol: UDP
+        # Web admin UI: allow only from same namespace
+        - from:
+              - namespaceSelector:
+                    matchLabels:
+                        kubernetes.io/metadata.name: homelab
+          ports:
+              - port: 80
+                protocol: TCP

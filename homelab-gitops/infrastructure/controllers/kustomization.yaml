@@ -6,3 +6,4 @@ resources:
     - ingress-apps.yaml
     - ingress-nginx.yaml
     - loki.yaml
+    -
