@@ -21,6 +21,8 @@ spec:
               - namespaceSelector:
                     matchLabels:
                         kubernetes.io/metadata.name: homelab
+              - ipBlock:
+                    cidr: 192.168.0.0/24
           ports:
               - port: 80
                 protocol: TCP
