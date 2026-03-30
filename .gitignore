@@ -4,9 +4,14 @@ Thumbs.db
 .vscode/
 .idea/
 **/production/pihole/secret.yaml
+# Sealed-secrets: plaintext secrets and tools
+secret.yaml
+sealed-secret.yaml
+kubeseal
 # Logs
 *.log
 npm-debug.log*
+
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*

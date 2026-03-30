@@ -36,7 +36,6 @@ spec:
                             secretKeyRef:
                                 name: pihole-credentials
                                 key: WEBPASSWORD
-                                optional: true
                   ports:
                       - name: web
                         containerPort: 80
